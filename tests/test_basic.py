@@ -2,9 +2,6 @@ import nanobind_example as m
 import numpy as np
 import pytest
 
-# def test_real():
-#     assert m.function(1, np.float64(2.)) == -2
-
 arr_real = np.array([2.7], dtype=np.float64)
 arr_complex = np.array([3+2.8j], dtype=np.complex128)
 

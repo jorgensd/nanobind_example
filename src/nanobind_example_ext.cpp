@@ -28,8 +28,8 @@ NB_MODULE(nanobind_example_ext, m)
         std::for_each(c.begin(), c.end(), [](auto &val)
                       {
             val *= -2; }); },
-        "a"_a,
-        "b"_a);
+        "b"_a,
+        "a"_a);
 
     m.def(
         "function", [](nb::ndarray<double, nb::ndim<1>, nb::c_contig> b, std::uint32_t a)
@@ -39,8 +39,8 @@ NB_MODULE(nanobind_example_ext, m)
         std::for_each(c.begin(), c.end(), [](auto &val)
                       {
             val *= -2; }); },
-        "a"_a,
-        "b"_a);
+        "b"_a,
+        "a"_a);
 
     m.def("new_func", [](nb::ndarray<double, nb::ndim<1>, nb::c_contig> b, std::uint32_t a)
           { templated_function(b, a); });

@@ -23,7 +23,5 @@ def test_real(func):
 @pytest.mark.parametrize("func", [m.function, m.new_func])
 def test_complex_uint32(func):
     a2 = arr_complex.copy()
-    print(a2)
-    func(a2, np.uint32(2), )
-    print(a2)
+    func(a2, np.uint32(2))
     assert np.allclose(a2, -2*arr_complex)

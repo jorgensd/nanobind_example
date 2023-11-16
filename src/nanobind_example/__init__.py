@@ -1,1 +1,1 @@
-from .nanobind_example_ext import function
+from .nanobind_example_ext import function, new_func

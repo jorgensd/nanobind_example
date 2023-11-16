@@ -24,7 +24,7 @@ if (NOT SKBUILD)
   the package is imported. Otherwise, you need to re-run the above
   after editing C++ files.")
 endif()
-
+set(CMAKE_CXX_STANDARD 20)
 # Try to import all Python components potentially needed by nanobind
 find_package(Python 3.8
   REQUIRED COMPONENTS Interpreter Development.Module

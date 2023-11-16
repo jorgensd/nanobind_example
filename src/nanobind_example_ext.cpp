@@ -2,23 +2,48 @@
 #include <nanobind/stl/complex.h>
 #include <complex.h>
 #include <iostream>
+#include <nanobind/ndarray.h>
+#include <span>
 namespace nb = nanobind;
 
 using namespace nb::literals;
 
+namespace
+{
+    template <typename T>
+    void templated_function(nb::ndarray<T, nb::ndim<1>, nb::c_contig> b, std::uint32_t a)
+    {
+        std::span<T> c(b.data(), b.size());
+        std::for_each(c.begin(), c.end(), [](auto &val)
+                      { val *= -2; });
+    }
+}
 NB_MODULE(nanobind_example_ext, m)
 {
     m.def(
-        "function", [](std::uint32_t a, const std::complex<float> &b)
-        { 
-            std::cout << "COMPLEX\n";
-            return -b; },
-        "a"_a, "b"_a);
+        "function", [](nb::ndarray<std::complex<double>, nb::ndim<1>, nb::c_contig> b, std::uint32_t a)
+        {
+        std::cout << "COMPLEX\n";
+       std::span<std::complex<double>>c(b.data(), b.size());
+        std::for_each(c.begin(), c.end(), [](auto &val)
+                      {
+            val *= -2; }); },
+        "a"_a,
+        "b"_a);
 
     m.def(
-        "function", [](std::uint32_t a, float b)
-        { 
-            std::cout << "REAL\n";
-            return b; },
-        "a"_a, "b"_a);
+        "function", [](nb::ndarray<double, nb::ndim<1>, nb::c_contig> b, std::uint32_t a)
+        {
+        std::cout << "REAL\n";
+        std::span<double>c(b.data(), b.size());
+        std::for_each(c.begin(), c.end(), [](auto &val)
+                      {
+            val *= -2; }); },
+        "a"_a,
+        "b"_a);
+
+    m.def("new_func", [](nb::ndarray<double, nb::ndim<1>, nb::c_contig> b, std::uint32_t a)
+          { templated_function(b, a); });
+    m.def("new_func", [](nb::ndarray<std::complex<double>, nb::ndim<1>, nb::c_contig> b, std::uint32_t a)
+          { templated_function(b, a); });
 }

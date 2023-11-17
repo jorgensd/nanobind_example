@@ -52,8 +52,44 @@ nanobind_add_module(
   NB_STATIC
 
   # Source code goes here
-  src/nanobind_example_ext.cpp
+  src/nanobind_example/nanobind_example_ext.cpp
 )
 
+
+# Help cmake find pybind11 installed as Python package
+execute_process(
+  COMMAND "${Python3_EXECUTABLE}" "-c"
+  "import pybind11; print(pybind11.get_cmake_dir())"
+  OUTPUT_VARIABLE PYBIND11_CMAKE_DIR
+  RESULT_VARIABLE PYBIND11_COMMAND_RESULT
+  ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if(NOT PYBIND11_COMMAND_RESULT)
+  message(STATUS "Found pybind11 cmake directory at ${PYBIND11_CMAKE_DIR}")
+endif() 
+
+find_package(
+  pybind11
+  2.9.1
+  REQUIRED
+  CONFIG
+  HINTS
+  ${PYBIND11_CMAKE_DIR}
+  ${PYBIND11_DIR}
+  ${PYBIND11_ROOT}
+  $ENV{PYBIND11_DIR}
+  $ENV{PYBIND11_ROOT}
+)
+
+# We are now ready to compile the actual extension module
+pybind11_add_module(
+  # Name of the extension
+  pybind11_example_ext
+  MODULE
+  src/nanobind_example/pybind11_example_ext.cpp
+)
+
+
 # Install directive for scikit-build-core
-install(TARGETS nanobind_example_ext LIBRARY DESTINATION nanobind_example)
+install(TARGETS nanobind_example_ext pybind11_example_ext LIBRARY DESTINATION nanobind_example)

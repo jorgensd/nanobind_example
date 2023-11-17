@@ -1,27 +1,17 @@
 import nanobind_example as m
 import numpy as np
-import pytest
-
-arr_real = np.array([2.7], dtype=np.float64)
-arr_complex = np.array([3+2.8j], dtype=np.complex128)
+import time
 
 
-@pytest.mark.parametrize("func", [m.function, m.new_func])
-def test_complex(func):
-    a2 = arr_complex.copy()
-    func(a2, 2)
-    assert np.allclose(a2, -2*arr_complex)
+arr = np.arange(10_000_000_00, dtype=np.float64)
 
 
-@pytest.mark.parametrize("func", [m.function, m.new_func])
-def test_real(func):
-    a2 = arr_real.copy()
-    func(a2, 2)
-    assert np.allclose(a2, -2*arr_real)
-
-
-@pytest.mark.parametrize("func", [m.function, m.new_func])
-def test_complex_uint32(func):
-    a2 = arr_complex.copy()
-    func(a2, np.uint32(2))
-    assert np.allclose(a2, -2*arr_complex)
+def test_vector():
+    start = time.perf_counter()
+    m.add_vector(arr)
+    end = time.perf_counter()
+    print(f"Nanobind: {end-start:5e}")
+    start = time.perf_counter()
+    m.add_vector_pb(arr)
+    end = time.perf_counter()
+    print(f"Pybind: {end-start:5e}")

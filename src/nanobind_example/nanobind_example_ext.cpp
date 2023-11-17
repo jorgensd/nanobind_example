@@ -24,5 +24,5 @@ NB_MODULE(nanobind_example_ext, m)
         {
             spanned_function<double>(std::span<double>(b.data(), b.size()));
         },
-        nb::arg("b"));
+        nb::arg("b").noconvert());
 }
